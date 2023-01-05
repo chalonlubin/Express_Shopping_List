@@ -6,7 +6,7 @@ const db = require("./fakeDb");
 const router = new express.Router();
 
 const { finder, confirmType } = require("./middleware");
-
+const { BadRequestError } = require("./expressError");
 
 //** GET /items: get list of items */
 router.get("/", function(req, res) {
@@ -19,10 +19,13 @@ router.get("/", function(req, res) {
 //** POST /items: add item to list */
 router.post("/", confirmType, function(req, res) {
   const { name, price } = req.body
-
+  let x = db.items.length
   db.items.push({name, price})
-
-  return res.json({"added": {name, price}})
+  if (x < db.items.length) {
+    return res.json({"added": {name, price}})
+  } else {
+    throw new BadRequestError();
+  }
 })
 
 //* GET /items/:name: get a single item. */
@@ -49,7 +52,7 @@ router.delete("/:name", finder, function(req, res) {
 
   db.items.splice(index,1);
 
-  return res.json({"message:": "Deleted"})
+  return res.json({"message": "Deleted"})
 })
 
 module.exports = router;
