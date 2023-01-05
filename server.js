@@ -1,7 +1,6 @@
-const express = require("express");
 
-const app = express();
+const app = require("./app");
 
 app.listen(3000, function() {
-  console.log("App started at https://localhost:3000/");
+  console.log("App started at http://localhost:3000/");
 });
